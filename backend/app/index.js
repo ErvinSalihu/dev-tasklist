@@ -42,6 +42,22 @@ app.post('/api/bookings', async (req, res) => {
   }
 });
 
+app.get('/api/bookings/:id', async (req,res) => {
+  const {id} = req.params;
+  try {
+    const [rows] = await pool.query('SELECT * FROM bookings WHERE id = ?', [id])
+    if(rows.length === 0){
+      return res.status(404).send("Booking not found")
+    }
+    res.status(200).json(rows[0])
+  } catch (error) {
+    console.error('Error inserting booking:', error);
+    res.status(500).send('Internal Server Error');
+  }
+})
+
+
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
